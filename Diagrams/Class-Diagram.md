@@ -1,3 +1,8 @@
+# Class Diagram
+
+> Architecture overview for the Astro/Vedic chart backend — controllers, services, models, and their relationships.
+
+```mermaid
 classDiagram
 direction TB
 
@@ -245,3 +250,23 @@ ProfileController ..> DoshaReport
 
 BaseService ..> LoggerService
 DoshaReportHelper ..> DoshaReport
+```
+
+---
+
+## Legend
+
+| Symbol | Meaning |
+|--------|---------|
+| `<\|--` | Inheritance (extends) |
+| `<\|..` | Implementation (implements interface) |
+| `-->` | Association / reference |
+| `*--` | Composition (owns) |
+| `..>` | Dependency (uses) |
+| `<<abstract>>` | Abstract class |
+| `<<interface>>` | Interface |
+| `<<type>>` | Type alias / enum |
+| `+` | Public |
+| `-` | Private |
+| `#` | Protected |
+
