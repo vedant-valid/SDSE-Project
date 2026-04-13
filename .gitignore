@@ -25,3 +25,7 @@ Thumbs.db
 
 # Opencode config (local only)
 opencode.json
+
+# Documentation (local only)
+ARCHITECTURAL_DOCS.md
+GEMINI.md
