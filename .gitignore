@@ -29,3 +29,5 @@ opencode.json
 # Documentation (local only)
 ARCHITECTURAL_DOCS.md
 GEMINI.md
+
+graphify-out/
