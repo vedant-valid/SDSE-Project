@@ -36,15 +36,15 @@ graph TB
     Actor --> UC4
     Actor --> UC5
     
-    %% Include Relationships (Mandatory Dependencies)
-    UC1 -.->|"<<include>>"| Auth
-    UC4 -.->|"<<include>>"| Auth
-    UC5 -.->|"<<include>>"| Auth
-    UC2 -.->|"<<include>>"| Fetch
+    %% Include Relationships (Mandatory dependencies)
+    UC1 -. "<<include>>" .-> Auth
+    UC4 -. "<<include>>" .-> Auth
+    UC5 -. "<<include>>" .-> Auth
+    UC2 -. "<<include>>" .-> Fetch
     
-    %% Extend Relationships (Optional Features)
-    UC3 -.->|"<<extend>>"| UC2
-    UC4a -.->|"<<extend>>"| UC4
+    %% Extend Relationships (Optional additions)
+    UC3 -. "<<extend>>" .-> UC2
+    UC4a -. "<<extend>>" .-> UC4
     
     %% External System Interactions
     Fetch --> API
@@ -54,7 +54,7 @@ graph TB
     UC4 --> DB
     UC5 --> DB
     
-    %% Styling
+    %% Original Styling
     style Actor fill:#1a237e,stroke:#fff,color:#fff
     style Auth fill:#004d40,stroke:#fff,color:#fff
     style Fetch fill:#004d40,stroke:#fff,color:#fff
