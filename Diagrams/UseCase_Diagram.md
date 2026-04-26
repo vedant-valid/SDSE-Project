@@ -1,5 +1,4 @@
-%%{init: {'theme': 'dark', 'themeVariables': { 'darkMode': true }}}%%
-flowchart LR
+graph LR
 
     %% Actors
     Actor((👤 Registered User))
@@ -8,8 +7,6 @@ flowchart LR
 
     %% System Boundary
     subgraph System ["Vedic Astrology System"]
-        direction TB
-        
         Auth([Authenticate User])
         
         UC1([Manage Birth Profile])
@@ -30,19 +27,13 @@ flowchart LR
     Actor --- UC5
 
     %% <<include>> Relationships (Base to Included - Dashed with arrow)
-    %% Authentication is required for these core actions
     UC1 -. "<<include>>" .-> Auth
     UC4 -. "<<include>>" .-> Auth
     UC5 -. "<<include>>" .-> Auth
-    
-    %% Chart calculation requires fetching data from the API
     UC2 -. "<<include>>" .-> Fetch
 
     %% <<extend>> Relationships (Extending to Base - Dashed with arrow)
-    %% Dosha analysis is an optional feature when calculating/viewing a chart
     UC3 -. "<<extend>>" .-> UC2
-    
-    %% Exporting is an optional feature of managing saved reports
     UC4a -. "<<extend>>" .-> UC4
 
     %% Secondary Actor / External System Relationships
