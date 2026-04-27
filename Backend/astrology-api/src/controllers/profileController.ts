@@ -3,6 +3,7 @@ import { BaseController } from "../core/BaseController";
 import { BirthChartModel } from "../models/BirthChartModel";
 import { DoshaReportModel } from "../models/DoshaReportModel";
 import { profileService } from "../services/profileService";
+import { getCoordinates } from "../utils/geocodingHelper";
 
 class ProfileController extends BaseController {
   private canAccessUser(reqUserId: string, reqUserRole: string, targetUserId: string): boolean {
@@ -16,6 +17,16 @@ class ProfileController extends BaseController {
     const existingProfile = await profileService.getProfileByUserId(userId);
     if (existingProfile) return this.fail(res, 409, "Profile already exists. Use update endpoint.");
 
+    let latitude = req.body.latitude;
+    let longitude = req.body.longitude;
+    if (latitude == null || longitude == null) {
+      const coords = await getCoordinates(req.body.city, req.body.country);
+      if (coords) {
+        latitude = coords.latitude;
+        longitude = coords.longitude;
+      }
+    }
+
     const profile = await profileService.createProfile({
       userId: userId as any,
       personalInfo: {
@@ -27,7 +38,7 @@ class ProfileController extends BaseController {
           city: req.body.city,
           state: req.body.state,
           country: req.body.country,
-          coordinates: { latitude: req.body.latitude, longitude: req.body.longitude },
+          coordinates: { latitude, longitude },
         },
       },
       timezone: req.body.timezone || "+5.5",

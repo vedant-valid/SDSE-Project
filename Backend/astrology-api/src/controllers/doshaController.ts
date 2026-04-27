@@ -4,20 +4,28 @@ import { DoshaReportModel } from "../models/DoshaReportModel";
 import { UserProfileModel } from "../models/UserProfileModel";
 import { doshaService } from "../services/doshaService";
 import { astroService } from "../services/AstroService";
-import { DoshaType } from "../types/vedic";
+import { DoshaType, VedicParams } from "../types/vedic";
 
 const DOSHA_TYPES: DoshaType[] = ["manglik", "kalsarp", "sadesati", "pitradosh", "nadi"];
 
 class DoshaController extends BaseController {
-  private async resolveDoshaRequest(
-    doshaType: DoshaType,
-    params: { dob: string; tob: string; lat: number; lon: number; tz: string }
-  ): Promise<Record<string, unknown>> {
-    if (doshaType === "manglik") {
-      return astroService.fetchManglikDosh(params);
-    } else {
-      return astroService.fetchOtherdosha(params, doshaType);
+  private buildParams(profile: InstanceType<typeof UserProfileModel>): VedicParams {
+    const d = new Date((profile as any).personalInfo.dateOfBirth);
+    const [hour, minute] = ((profile as any).personalInfo.timeOfBirth as string).split(":").map(Number);
+    const coords = (profile as any).personalInfo.placeOfBirth.coordinates;
+    const params: VedicParams = {
+      year:  d.getFullYear(),
+      month: d.getMonth() + 1,
+      day:   d.getDate(),
+      hour,
+      minute,
+      city: (profile as any).personalInfo.placeOfBirth.city,
+    };
+    if (coords?.latitude != null && coords?.longitude != null) {
+      params.lat = coords.latitude;
+      params.lng = coords.longitude;
     }
+    return params;
   }
 
   public getDoshaTypes = this.asyncHandler(async (_req: Request, res: Response) => {
@@ -32,43 +40,32 @@ class DoshaController extends BaseController {
       req.query as Record<string, string>;
 
     const filter: Record<string, unknown> = { userId };
-    if (type) filter.doshaType = type;
-    if (severity) filter.severity = severity;
+    if (type)      filter.doshaType = type;
+    if (severity)  filter.severity = severity;
     if (isPresent !== undefined) filter.isPresent = isPresent === "true";
 
-    const pageNumber = Number(page);
-    const limitNumber = Number(limit);
-    const skip = (pageNumber - 1) * limitNumber;
+    const pageNum  = Number(page);
+    const limitNum = Number(limit);
+    const skip     = (pageNum - 1) * limitNum;
 
     if (search) {
       const all = await DoshaReportModel.find(filter).populate("profileId", "personalInfo").sort(sort);
       const filtered = all.filter((item: any) =>
         item.profileId?.personalInfo?.name?.toLowerCase().includes(search.toLowerCase())
       );
-
       return res.json({
-        success: true,
-        total: filtered.length,
-        page: pageNumber,
-        limit: limitNumber,
-        data: filtered.slice(skip, skip + limitNumber).map((r) => doshaService.formatReport(r as any)),
+        success: true, total: filtered.length, page: pageNum, limit: limitNum,
+        data: filtered.slice(skip, skip + limitNum).map((r) => doshaService.formatReport(r as any)),
       });
     }
 
     const [items, total] = await Promise.all([
-      DoshaReportModel.find(filter)
-        .populate("profileId", "personalInfo")
-        .sort(sort)
-        .skip(skip)
-        .limit(limitNumber),
+      DoshaReportModel.find(filter).populate("profileId", "personalInfo").sort(sort).skip(skip).limit(limitNum),
       DoshaReportModel.countDocuments(filter),
     ]);
 
     return res.json({
-      success: true,
-      total,
-      page: pageNumber,
-      limit: limitNumber,
+      success: true, total, page: pageNum, limit: limitNum,
       data: items.map((r) => doshaService.formatReport(r as any)),
     });
   });
@@ -78,6 +75,9 @@ class DoshaController extends BaseController {
     if (!userId) return this.fail(res, 401, "Unauthorized");
 
     const { doshaType, profileId } = req.body as { doshaType: DoshaType; profileId?: string };
+    if (!DOSHA_TYPES.includes(doshaType)) {
+      return this.fail(res, 400, `Invalid doshaType. Valid values: ${DOSHA_TYPES.join(", ")}`);
+    }
 
     const profileFilter: Record<string, unknown> = { userId, isDeleted: false };
     if (profileId) profileFilter._id = profileId;
@@ -85,32 +85,25 @@ class DoshaController extends BaseController {
     const profile = await UserProfileModel.findOne(profileFilter);
     if (!profile) return this.fail(res, 404, "Profile not found");
 
-    const params = {
-      dob: doshaService.formatDate(profile.personalInfo.dateOfBirth),
-      tob: profile.personalInfo.timeOfBirth,
-      lat: profile.personalInfo.placeOfBirth.coordinates.latitude,
-      lon: profile.personalInfo.placeOfBirth.coordinates.longitude,
-      tz: profile.timezone,
-    };
+    // Fetch full Vedic chart, then compute the requested dosha from it
+    const chartData = await astroService.fetchVedicChart(this.buildParams(profile as any));
+    const doshaResult = astroService.computeDosha(doshaType, chartData);
 
-    const reportData = await this.resolveDoshaRequest(doshaType, params);
-    const isPresent = Boolean((reportData.is_present ?? reportData.present) as boolean);
-    const severity = doshaService.calculateSeverity(reportData);
-    const remedies = Array.isArray(reportData.remedies)
-      ? (reportData.remedies as string[])
-      : [];
+    const severity = doshaResult.is_present
+      ? doshaService.calculateSeverity(doshaResult as unknown as Record<string, unknown>)
+      : "low";
 
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
     const saved = await DoshaReportModel.create({
       userId,
-      profileId: profile._id,
+      profileId: (profile as any)._id,
       doshaType,
-      inputParams: params,
-      apiResponse: reportData,
-      isPresent,
+      inputParams: this.buildParams(profile as any) as unknown as Record<string, unknown>,
+      apiResponse: { ...doshaResult, chartSnapshot: { ayanamsha: chartData.ayanamsha, ascendant: chartData.ascendant } },
+      isPresent: doshaResult.is_present,
       severity,
-      remedies,
+      remedies: doshaResult.remedies,
       cachedAt: new Date(),
       expiresAt,
     });

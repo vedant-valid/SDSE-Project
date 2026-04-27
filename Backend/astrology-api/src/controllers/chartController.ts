@@ -3,18 +3,28 @@ import { ChartType } from "../config/vedicAstroConfig";
 import { BaseController } from "../core/BaseController";
 import { BirthChartModel } from "../models/BirthChartModel";
 import { IUserProfile, UserProfileModel } from "../models/UserProfileModel";
-import { birthChartService } from "../services/birthChartService";
 import { astroService } from "../services/AstroService";
+import { VedicParams } from "../types/vedic";
+import { getCoordinates } from "../utils/geocodingHelper";
 
 class ChartController extends BaseController {
-  private buildChartParamsFromProfile(profile: IUserProfile) {
-    return {
-      dob: birthChartService.formatDate(profile.personalInfo.dateOfBirth),
-      tob: profile.personalInfo.timeOfBirth,
-      lat: profile.personalInfo.placeOfBirth.coordinates.latitude,
-      lon: profile.personalInfo.placeOfBirth.coordinates.longitude,
-      tz: profile.timezone,
+  private buildParams(profile: IUserProfile): VedicParams {
+    const d = new Date(profile.personalInfo.dateOfBirth);
+    const [hour, minute] = profile.personalInfo.timeOfBirth.split(":").map(Number);
+    const params: VedicParams = {
+      year:  d.getFullYear(),
+      month: d.getMonth() + 1,
+      day:   d.getDate(),
+      hour,
+      minute,
+      city: profile.personalInfo.placeOfBirth.city,
     };
+    const coords = profile.personalInfo.placeOfBirth.coordinates;
+    if (coords?.latitude != null && coords?.longitude != null) {
+      params.lat = coords.latitude;
+      params.lng = coords.longitude;
+    }
+    return params;
   }
 
   public generateChart = this.asyncHandler(async (req: Request, res: Response) => {
@@ -58,10 +68,7 @@ class ChartController extends BaseController {
       return this.fail(res, 403, "Insufficient access");
     }
 
-    const charts = await BirthChartModel.find({ userId: targetUserId, isDeleted: false }).sort({
-      createdAt: -1,
-    });
-
+    const charts = await BirthChartModel.find({ userId: targetUserId, isDeleted: false }).sort({ createdAt: -1 });
     return res.json({ success: true, count: charts.length, data: charts });
   });
 
@@ -92,28 +99,68 @@ class ChartController extends BaseController {
 
     chart.chartName = req.body.chartName || chart.chartName;
     await chart.save();
-
     return this.ok(res, chart, "Chart renamed");
   });
 
-  public saveChart = this.asyncHandler(async (req: Request, res: Response) => {
-    // Identical to generateChart - aligns with UML method list
+  public generateForGuest = this.asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?._id;
-    if (!userId) return this.fail(res, 401, 'Unauthorized');
+    if (!userId) return this.fail(res, 401, "Unauthorized");
+
+    const { name, gender, dateOfBirth, timeOfBirth, city, state, country, latitude, longitude } =
+      req.body as {
+        name: string; gender: string; dateOfBirth: string; timeOfBirth: string;
+        city: string; state?: string; country: string;
+        latitude?: number; longitude?: number;
+      };
+
+    const d = new Date(dateOfBirth);
+    const [hour, minute] = timeOfBirth.split(":").map(Number);
+
+    let lat = latitude;
+    let lng = longitude;
+    if (lat == null || lng == null) {
+      const coords = await getCoordinates(city, country);
+      if (coords) { lat = coords.latitude; lng = coords.longitude; }
+    }
+
+    const params: VedicParams = {
+      year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(),
+      hour, minute, city,
+      ...(lat != null && lng != null ? { lat, lng } : {}),
+    };
+
+    const chartData = await astroService.fetchVedicChart(params);
+
+    const chart = await BirthChartModel.create({
+      userId,
+      chartName: `${name}'s Kundali`,
+      chartData,
+      chartImage: "",
+      generatedAt: new Date(),
+      guestDetails: { name, gender, dateOfBirth, timeOfBirth, city, state, country },
+    });
+
+    return this.created(res, chart, "Chart generated successfully");
+  });
+
+  public saveChart = this.asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user?._id;
+    if (!userId) return this.fail(res, 401, "Unauthorized");
 
     const profile = await UserProfileModel.findOne({ userId, isDeleted: false });
-    if (!profile) return this.fail(res, 404, 'Please create your profile first');
+    if (!profile) return this.fail(res, 404, "Please create your profile first");
 
-    const chartData = await astroService.fetchBirthChart(this.buildChartParamsFromProfile(profile));
+    const chartData = await astroService.fetchVedicChart(this.buildParams(profile));
+
     const chart = await BirthChartModel.create({
       userId,
       profileId: profile._id,
-      chartName: req.body.chartName || 'My Birth Chart',
+      chartName: req.body.chartName || "My Birth Chart",
       chartData,
-      chartImage: String((chartData.svg_chart || chartData.chart_url || '') as string),
+      chartImage: "",
       generatedAt: new Date(),
     });
-    return this.created(res, chart, 'Chart saved successfully');
+    return this.created(res, chart, "Chart saved successfully");
   });
 
   public deleteChart = this.asyncHandler(async (req: Request, res: Response) => {
