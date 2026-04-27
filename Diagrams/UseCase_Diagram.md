@@ -58,3 +58,6 @@ graph LR
     class UC1,UC2,UC3,UC4,UC5 usecase
     class UC6,UC7,UC8 internal
     class API,DB external
+
+
+

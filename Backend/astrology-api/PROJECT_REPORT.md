@@ -10,39 +10,39 @@ This is a Node.js TypeScript backend for an Astrology API with RBAC (Role-Based 
 ### 1. Single Responsibility Principle (S)
 | File | Status | Notes |
 |------|--------|-------|
-| AstroService | ✅ | Only makes API calls |
-| birthChartService | ✅ | Each method does one thing |
-| doshaService | ✅ | Separate methods for date, severity, format |
-| profileService | ✅ | Delegates to Mongoose |
-| BaseController | ✅ | Response handling only |
-| BaseService | ✅ | Logging only |
+| AstroService |  | Only makes API calls |
+| birthChartService |  | Each method does one thing |
+| doshaService |  | Separate methods for date, severity, format |
+| profileService |  | Delegates to Mongoose |
+| BaseController |  | Response handling only |
+| BaseService |  | Logging only |
 
 ### 2. Open/Closed Principle (O)
 | File | Status | Notes |
 |------|--------|-------|
-| AstroService | ✅ | Uses DOSHA_ENDPOINT_MAP - add new dosha without code changes |
-| Controllers | ✅ | Use interfaces/validators |
-| Validators | ✅ | Joi schemas - easy to extend |
+| AstroService |  | Uses DOSHA_ENDPOINT_MAP - add new dosha without code changes |
+| Controllers |  | Use interfaces/validators |
+| Validators |  | Joi schemas - easy to extend |
 
 ### 3. Liskov Substitution Principle (L)
 | File | Status | Notes |
 |------|--------|-------|
-| All Controllers | ✅ | Extend BaseController |
-| All Services | ✅ | Extend BaseService |
-| Models | ✅ | Implement interfaces |
+| All Controllers |  | Extend BaseController |
+| All Services |  | Extend BaseService |
+| Models |  | Implement interfaces |
 
 ### 4. Interface Segregation Principle (I)
 | File | Status | Notes |
 |------|--------|-------|
-| IAstroService | ✅ | Only required methods |
-| IUser | ✅ | Public fields only |
-| IDoshaReport | ✅ | Public fields only |
+| IAstroService |  | Only required methods |
+| IUser |  | Public fields only |
+| IDoshaReport |  | Public fields only |
 
 ### 5. Dependency Inversion Principle (D)
 | File | Status | Notes |
 |------|--------|-------|
-| Controllers | ✅ | Depend on interfaces not concrete |
-| Services | ✅ | Config via environment variables |
+| Controllers |  | Depend on interfaces not concrete |
+| Services |  | Config via environment variables |
 
 ---
 
