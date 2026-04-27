@@ -1,370 +1,180 @@
-# Deepa's Vision — Vedic Astrology Platform
+<div align="center">
 
-> A full-stack Vedic astrology platform for birth chart generation, dosha detection, and personalized astrology reports — built with Next.js, Node.js, and the VedicAstro API.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6B35,100:FFD700&height=220&section=header&text=Deepa's+Vision&fontSize=72&fontColor=ffffff&animation=twinkling&fontAlignY=35" width="100%" />
 
----
+<h3 align="center">✨ THE VEDIC ASTROLOGY INTELLIGENCE PLATFORM</h3>
 
-## 🌐 Live Demo
+<p align="center">
+<b>Deepa's Vision</b> is a full-stack Vedic astrology platform that transforms raw birth data into precise astronomical insights — birth charts, planetary dosha detection, and personalized reports, powered by real astronomical computation.
+</p>
 
-> _Coming soon — deploy links will be added here_
+<p align="center">
+  <a href="#"><img src="https://img.shields.io/badge/Frontend-Next.js_14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white&labelColor=101010" alt="Next.js"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Backend-Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white&labelColor=101010" alt="Node.js"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=101010" alt="TypeScript"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white&labelColor=101010" alt="MongoDB"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Styling-Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white&labelColor=101010" alt="Tailwind"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/API-VedicAstro-FF6B35?style=for-the-badge&logo=stardock&logoColor=white&labelColor=101010" alt="VedicAstro"/></a>
+</p>
 
----
-
-## Screenshots
-
-<img width="1800" height="1036" alt="image" src="https://github.com/user-attachments/assets/d7ebc034-8e46-461e-8be3-a1241dca94ae" />
-
----
-
-## 📌 Table of Contents
-
-- [About the Project](#about-the-project)
-- [Core Features](#core-features)
-- [Tech Stack](#tech-stack)
-- [Architecture Overview](#architecture-overview)
-- [Folder Structure](#folder-structure)
-- [API Reference](#api-reference)
-- [Database Models](#database-models)
-- [CRUD Operations](#crud-operations)
-- [External API Integration](#external-api-integration)
-- [Environment Variables](#environment-variables)
-- [Getting Started](#getting-started)
-- [Scripts](#scripts)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
+</div>
 
 ---
 
-## 📖 About the Project
+## 🌌 The Vision
 
-**Deepa's Vision** is a modern Vedic astrology web application inspired by platforms like AstroSage and AstroTalk. It allows users to:
-
-- Create and manage their personal astrology profile
-- Generate their Vedic birth chart (Kundli) using real astronomical data
-- Detect planetary doshas such as Mangal Dosh, Kaal Sarp Dosh, and Sade Sati
-- Save and revisit their charts and dosha reports at any time
-
-The platform follows a clean **client–server separation** where all sensitive API calls (VedicAstro API key) are handled exclusively on the backend.
+Most astrology apps give you a generic horoscope. **Deepa's Vision** gives you the truth. Feed it your birth coordinates and timestamp — and the platform constructs your complete Vedic identity: natal chart, dosha severity, planetary positions, all anchored in real astronomical data. No guesswork. No generic readings. Just pure Jyotish science.
 
 ---
 
-## ✨ Core Features
+## ⚡ Core Arsenal (Features)
 
-| # | Feature | Description |
-|---|---------|-------------|
-| 1 | **User Profile** | Create and manage personal birth details (name, DOB, TOB, birthplace, gender) |
-| 2 | **Birth Chart Generation** | Generate Vedic Kundli (natal chart) via VedicAstro API, stored per user |
-| 3 | **Dosha Detection** | Check Mangal Dosh, Kaal Sarp Dosh, Sade Sati with detailed reports |
-| 4 | **Saved Charts & Reports** | View, rename, and delete previously generated charts and dosha reports |
+<details open>
+  <summary><b>🪐 Birth Chart (Kundli) Generation</b></summary>
+  <blockquote>Generates a precise Vedic natal chart using real astronomical computations via the VedicAstro API. Planetary positions, house placements, and the full Kundli grid are rendered visually and stored per user for future reference.</blockquote>
+</details>
 
----
+<details open>
+  <summary><b>🔮 Dosha Detection Engine</b></summary>
+  <blockquote>Detects and analyzes Mangal Dosh, Kaal Sarp Dosh, Sade Sati, Pitra Dosh, and Nadi Dosh from your birth parameters. A 24-hour MongoDB caching layer ensures zero redundant API calls — reports are served instantly on repeat visits.</blockquote>
+</details>
 
-## 🛠 Tech Stack
+<details open>
+  <summary><b>👤 Personalized Astrology Profile</b></summary>
+  <blockquote>Create and manage a persistent birth profile with name, date of birth, time of birth, birthplace coordinates, gender, and timezone. All charts and doshas are tethered to this profile, building a complete astrological identity over time.</blockquote>
+</details>
 
-### Frontend
+<details open>
+  <summary><b>🛡️ Secure JWT Authentication</b></summary>
+  <blockquote>Enterprise-grade security using stateless JWT tokens, HttpOnly cookies, Bcrypt password hashing, and a dedicated <code>AuthMiddleware</code> that guards every private route. The VedicAstro API key never leaves the server.</blockquote>
+</details>
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| [Next.js](https://nextjs.org/) | 14+ (App Router) | React framework with SSR/SSG support |
-| [TypeScript](https://www.typescriptlang.org/) | 5+ | Type safety across the frontend |
-| [Tailwind CSS](https://tailwindcss.com/) | 3+ | Utility-first styling |
-| [Axios](https://axios-http.com/) | Latest | HTTP client for API calls |
-| [React Hook Form](https://react-hook-form.com/) | Latest | Form state management + validation |
-| [Zod](https://zod.dev/) | Latest | Schema-based client-side validation |
-
-### Backend
-
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| [Node.js](https://nodejs.org/) | 18+ | JavaScript runtime |
-| [Express.js](https://expressjs.com/) | 4+ | REST API framework |
-| [MongoDB](https://www.mongodb.com/) | 6+ | NoSQL database |
-| [Mongoose](https://mongoosejs.com/) | 7+ | MongoDB ODM / schema modeling |
-| [JWT](https://jwt.io/) | Latest | Stateless authentication tokens |
-| [bcryptjs](https://www.npmjs.com/package/bcryptjs) | Latest | Password hashing |
-| [Joi](https://joi.dev/) | Latest | Server-side request validation |
-| [dotenv](https://www.npmjs.com/package/dotenv) | Latest | Environment variable management |
-| [cors](https://www.npmjs.com/package/cors) | Latest | Cross-origin resource sharing |
-| [node-cache](https://www.npmjs.com/package/node-cache) | Latest | In-memory dosha result caching |
-
-### External API
-
-| Service | Purpose |
-|---------|---------|
-| [VedicAstro API](https://api.vedicastroapi.com/) | Birth chart generation + dosha detection |
+<details open>
+  <summary><b>📁 Saved Charts & Reports</b></summary>
+  <blockquote>View, rename, and delete previously generated birth charts and dosha reports from a dedicated saved history page. Pagination and sort controls keep large chart histories manageable.</blockquote>
+</details>
 
 ---
 
-## 🏗 Architecture Overview
+## 🧬 Architectural DNA (System Design)
 
+Deepa's Vision operates on a strict **3-Tier MVC-S Architecture** with a secure API proxy layer and an intelligent caching strategy.
+
+<div align="center">
+
+```mermaid
+graph TD
+    A[👨‍💻 User] -->|HTTP Request| B(⚛️ Next.js Frontend)
+    B -->|Authenticated Payload| C{⚡ Express Controller}
+
+    C -->|Verify JWT| F[🛡️ Auth Middleware]
+    F -->|Delegate| S[⚙️ Business Service]
+
+    S -->|Persist / Cache| D[(🍃 MongoDB Atlas)]
+    S -->|VedicParams| E((🪐 AstroService))
+
+    E -->|Strategy Map| G[VedicAstro API]
+    G -->|JSON Response| S
+
+    S -->|Formatted Result| C
+    C -->|REST Response| B
+    B -->|Render Chart / Dosha| A
+
+    style A fill:#0f172a,stroke:#f97316,stroke-width:2px,color:#fff
+    style B fill:#1c1917,stroke:#fb923c,stroke-width:2px,color:#fff
+    style C fill:#1a1a2e,stroke:#fbbf24,stroke-width:2px,color:#fff
+    style D fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#fff
+    style E fill:#4c1d95,stroke:#c084fc,stroke-width:2px,color:#fff
+    style F fill:#7f1d1d,stroke:#f87171,stroke-width:2px,color:#fff
+    style S fill:#78350f,stroke:#fcd34d,stroke-width:2px,color:#fff
+    style G fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#fff
 ```
-Browser (Next.js)
-       │
-       │  HTTPS (Axios)
-       ▼
-Express REST API  ──────────►  MongoDB
-       │                       (Profiles, Charts, Reports)
-       │  Internal Server Call
-       ▼
-VedicAstro External API
-(API key never exposed to client)
-```
 
-**Key Principle:** The frontend never directly calls VedicAstro. Every external call is proxied through the Express backend, keeping the API key secure.
+</div>
 
-**Caching Strategy:** Dosha reports are cached in MongoDB with a 24-hour TTL. If the same user requests the same dosha within 24 hours, the stored result is returned — no unnecessary external API call is made.
+**Key Security Rule:** The frontend never calls VedicAstro directly. Every external call is proxied through the Express backend — the API key is server-only.
+
+**Caching Strategy:** Dosha reports are persisted in MongoDB with a 24-hour TTL. Repeat requests for the same user + dosha type hit the cache, not the external API.
 
 ---
 
-## 📁 Folder Structure
+## 🏗️ Design Patterns & SOLID Principles
 
-### Backend (`/backend`)
+Deepa's Vision is built on a rigorously structured, enterprise-grade architecture. Every design decision was made to maximize scalability, testability, and separation of concerns.
 
-```
-backend/
-└── src/
-    ├── config/
-    │   ├── db.js                  # MongoDB connection setup
-    │   └── astroApi.js            # VedicAstro base URL + API key config
-    │
-    ├── controllers/
-    │   ├── authController.js      # Register, login, password reset
-    │   ├── profileController.js   # Create, read, update profile
-    │   ├── chartController.js     # Generate, save, delete charts
-    │   └── doshaController.js     # Fetch and cache dosha reports
-    │
-    ├── services/
-    │   ├── astroService.js        # All VedicAstro API calls (single responsibility)
-    │   └── cacheService.js        # Cache wrapper (node-cache or Redis)
-    │
-    ├── models/
-    │   ├── UserModel.js
-    │   ├── ProfileModel.js
-    │   ├── ChartModel.js
-    │   └── DoshaReportModel.js
-    │
-    ├── routes/
-    │   ├── authRoutes.js
-    │   ├── profileRoutes.js
-    │   ├── chartRoutes.js
-    │   └── doshaRoutes.js
-    │
-    ├── middleware/
-    │   ├── authMiddleware.js      # JWT verification
-    │   └── validateRequest.js    # Joi-based input validation
-    │
-    ├── utils/
-    │   ├── generateToken.js       # JWT signing utility
-    │   └── formatBirthData.js     # Converts form input → API query format
-    │
-    └── app.js
-```
+### 🧩 Core Design Patterns
 
-### Frontend (`/frontend`)
+1. **MVC-S (Model-View-Controller-Service)** *(Architectural Pattern)*  
+   **How & Why:** The architectural backbone. Controllers exclusively handle HTTP and delegate everything to Services. Services own all business logic, cache decisions, and API orchestration. Models bind strictly to MongoDB schemas. Zero business logic leaks into controllers.
 
-```
-frontend/
-├── app/
-│   ├── auth/page.tsx              # Login / Register
-│   ├── profile/
-│   │   ├── page.tsx               # View profile
-│   │   └── edit/page.tsx          # Edit birth details
-│   ├── chart/
-│   │   ├── page.tsx               # Generate chart form
-│   │   └── [id]/page.tsx          # View individual chart
-│   ├── dosha/
-│   │   ├── page.tsx               # Dosha search + filter
-│   │   └── [type]/page.tsx        # Individual dosha report
-│   ├── saved/page.tsx             # All saved charts and reports
-│   ├── layout.tsx
-│   └── globals.css
-│
-├── components/
-│   ├── charts/
-│   │   ├── KundliWheel.tsx        # Visual Kundli chart render
-│   │   └── ChartTable.tsx         # Planetary position table
-│   ├── dosha/
-│   │   ├── DoshaCard.tsx          # Single dosha result card
-│   │   └── DoshaFilter.tsx        # Filter/search doshas
-│   ├── profile/
-│   │   └── ProfileForm.tsx        # Birth detail form
-│   └── shared/
-│       ├── Navbar.tsx
-│       └── Loader.tsx
-│
-├── hooks/
-│   ├── useProfile.ts              # Profile data + mutations
-│   ├── useChart.ts                # Chart generation + state
-│   └── useDosha.ts                # Dosha fetching + filtering
-│
-├── services/
-│   ├── profileService.ts          # Axios calls → /api/profile
-│   ├── chartService.ts            # Axios calls → /api/chart
-│   └── doshaService.ts            # Axios calls → /api/dosha
-│
-└── utils/
-    └── axiosInstance.ts           # Axios base config + interceptors
-```
+2. **Observer Pattern** (`UserModel.ts`, `DoshaReportModel.ts`) *(Behavioral Design Pattern)*  
+   **How & Why:** Mongoose's `toJSON()` method acts as an observer — the moment a model is serialized for any API response, it automatically strips sensitive fields (`password`, `resetPasswordToken`, `inputParams`, `apiResponse`). Controllers never need to manually filter. It is enforced globally, automatically, for every endpoint.
+
+3. **Strategy Pattern** (`AstroService.ts`) *(Behavioral Design Pattern)*  
+   **How & Why:** Each dosha type requires a different VedicAstro endpoint. Rather than a brittle `switch` statement, a `DOSHA_ENDPOINT_MAP` object maps dosha identifiers to their respective endpoints. Adding a new dosha is a one-line map entry — zero changes to the core logic. Pure Strategy.
+
+4. **Template Method Pattern** (`BaseController.ts`) *(Behavioral Design Pattern)*  
+   **How & Why:** The `asyncHandler` wrapper in `BaseController` defines a fixed error-handling skeleton. Every controller method runs inside it — if any async operation throws, the error is automatically forwarded to Express's error middleware via `next()`. The template is identical for all 15+ controller methods; no try/catch repetition.
+
+5. **Chain of Responsibility** (`authMiddleware.ts`) *(Behavioral Design Pattern)*  
+   **How & Why:** The `AuthMiddleware` intercepts every protected route before the controller sees it. It decodes the JWT, validates the user, and calls `next()` to pass the baton. If the token is invalid or expired, the chain terminates immediately with `401 Unauthorized` — the controller never executes.
+
+### 🏛️ SOLID Principles Implemented
+
+- **S (Single Responsibility):** `AstroService` only calls the external API. `DoshaService` only handles formatting and severity calculation. `BirthChartService` only handles date/time conversions. No class has two unrelated jobs.
+- **O (Open/Closed):** The `DOSHA_ENDPOINT_MAP` is closed for modification but open for extension. Adding a new dosha type requires adding one line to the map — no existing methods change.
+- **L (Liskov Substitution):** All controllers extend `BaseController`; all services extend `BaseService`. Any subclass can substitute for its parent without breaking the system — verified through constructor-based dependency injection.
+- **I (Interface Segregation):** `IAstroService` exposes only astro methods. `ICacheService` exposes only cache methods. No service is forced to implement methods that don't belong to it.
+- **D (Dependency Inversion):** `DoshaController` depends on the `IAstroService` interface, not on the concrete `AstroService` class. Swapping the implementation (e.g., for a different astro provider) requires zero changes to the controller layer.
 
 ---
 
-## 🔌 API Reference
+## 🎮 Execution Flow (Sequence)
 
-### Auth Routes
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/auth/register` | Register new user | ❌ |
-| POST | `/api/auth/login` | Login + receive JWT | ❌ |
-| POST | `/api/auth/forgot-password` | Send reset email | ❌ |
-| POST | `/api/auth/reset-password/:token` | Reset password | ❌ |
+How does a dosha request travel through the system?
 
-### Profile Routes
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/profile` | Create user profile | ✅ |
-| GET | `/api/profile` | Get current user profile | ✅ |
-| PUT | `/api/profile` | Update birth details | ✅ |
+<div align="center">
 
-### Chart Routes
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/chart/generate` | Generate + save birth chart | ✅ |
-| GET | `/api/chart/saved` | Get all saved charts (paginated) | ✅ |
-| GET | `/api/chart/:id` | Get single chart by ID | ✅ |
-| PUT | `/api/chart/:id` | Rename a chart | ✅ |
-| DELETE | `/api/chart/:id` | Delete a saved chart | ✅ |
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Frontend as ⚛️ Next.js UI
+    participant Auth as 🛡️ Auth Middleware
+    participant Controller as ⚡ DoshaController
+    participant Service as ⚙️ DoshaService
+    participant Cache as 🍃 MongoDB Cache
+    participant API as 🪐 VedicAstro API
 
-### Dosha Routes
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/dosha/:type` | Fetch dosha report (cached 24h) | ✅ |
-| GET | `/api/dosha` | List all doshas with filter/search | ✅ |
-
-> **Supported `type` values:** `manglik`, `kaalsarp`, `sadesati`
-
-**Query Parameters (Dosha & Chart):**
+    User->>Frontend: Select Dosha + Submit Form
+    Frontend->>Auth: GET /api/dosha/:type (JWT Cookie)
+    activate Auth
+    Auth->>Auth: Verify & Decode JWT
+    Auth->>Controller: Forward Authenticated Request
+    deactivate Auth
+    activate Controller
+    Controller->>Cache: Check for cached report (24h TTL)
+    alt Cache Hit
+        Cache-->>Controller: Return cached result
+    else Cache Miss
+        Controller->>Service: Invoke AstroService Strategy
+        activate Service
+        Service->>API: callApi(DOSHA_ENDPOINT_MAP[type], params)
+        API-->>Service: Raw JSON Response
+        Service->>Cache: Persist report with TTL
+        Service-->>Controller: Formatted Report
+        deactivate Service
+    end
+    Controller-->>Frontend: JSON Response
+    deactivate Controller
+    Frontend-->>User: Render Dosha Report Card
 ```
-?dob=21/04/1995&tob=11:40&lat=11&lon=77&tz=5.5
-```
 
-**Pagination Parameters:**
-```
-?page=1&limit=10&sort=createdAt&order=desc
-```
+</div>
 
 ---
 
-## 🗄 Database Models
-
-### `UserModel`
-```js
-{
-  email: String,          // unique
-  passwordHash: String,
-  role: String,           // "user" | "admin"
-  isDeleted: Boolean,     // soft delete flag
-  deletedAt: Date,
-  createdAt, updatedAt
-}
-```
-
-### `ProfileModel`
-```js
-{
-  userId: ObjectId,       // ref → User
-  name: String,
-  dob: String,            // "21/04/1995"
-  tob: String,            // "11:40"
-  lat: Number,
-  lon: Number,
-  timezone: Number,       // e.g. 5.5 for IST
-  gender: String,
-  birthplace: String,
-  createdAt, updatedAt
-}
-```
-
-### `ChartModel`
-```js
-{
-  userId: ObjectId,
-  profileId: ObjectId,
-  chartType: String,      // "natal" | "navamsa"
-  label: String,          // user-given name
-  apiResponse: Object,    // raw VedicAstro JSON
-  createdAt
-}
-```
-
-### `DoshaReportModel`
-```js
-{
-  userId: ObjectId,
-  doshaType: String,      // "manglik" | "kaalsarp" | "sadesati"
-  inputParams: Object,    // { dob, tob, lat, lon }
-  apiResponse: Object,    // cached raw result
-  fetchedAt: Date         // used for 24h cache expiry
-}
-```
-
----
-
-## ✅ CRUD Operations
-
-| Operation | Feature | Endpoint |
-|-----------|---------|----------|
-| **CREATE** | Save user profile | `POST /api/profile` |
-| **CREATE** | Generate + save chart | `POST /api/chart/generate` |
-| **READ** | View profile | `GET /api/profile` |
-| **READ** | Fetch dosha report | `GET /api/dosha/:type` |
-| **UPDATE** | Edit birth details | `PUT /api/profile` |
-| **UPDATE** | Rename saved chart | `PUT /api/chart/:id` |
-| **DELETE** | Delete saved chart | `DELETE /api/chart/:id` |
-| **DELETE** | Delete account (soft) | `DELETE /api/user/account` |
-
----
-
-## 🌐 External API Integration
-
-This project uses the [VedicAstro API](https://api.vedicastroapi.com/) for all astronomical calculations.
-
-**Example — Manglik Dosh:**
-```
-GET https://api.vedicastroapi.com/v3-json/dosha/manglik-dosh
-  ?dob=21/04/1995
-  &tob=11:40
-  &lat=11
-  &lon=77
-  &tz=5.5
-  &api_key=YOUR_KEY
-  &lang=en
-```
-
-**Security Rule:** The `api_key` is stored in `.env` on the backend only. It is never sent to or from the browser.
-
----
-
-## 🔐 Environment Variables
-
-### Backend `.env`
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/astroverse
-JWT_SECRET=your_jwt_secret_here
-JWT_EXPIRES_IN=7d
-VEDIC_API_KEY=your_vedicastro_api_key_here
-CLIENT_URL=http://localhost:3000
-```
-
-### Frontend `.env`
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-```
-
----
-
-## 🚀 Getting Started
+## ⚙️ Hyper-Drive Boot Sequence (Setup)
 
 ### Prerequisites
 
@@ -372,32 +182,30 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 - MongoDB running locally or a [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) URI
 - A VedicAstro API key from [vedicastroapi.com](https://vedicastroapi.com)
 
----
-
 ### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/vedant-valid/SDSE-Project.git
-
+cd SDSE-Project
 ```
 
-### 2. Setup Backend
+### 2. Ignite the Backend Core
 
 ```bash
-cd backend
-npm install
+cd Backend/astrology-api
 cp .env.example .env
-# Fill in your MONGO_URI, JWT_SECRET, and VEDIC_API_KEY
+# Fill in MONGO_URI, JWT_SECRET, and VEDIC_API_KEY
+npm install
 npm run dev
 ```
 
-### 3. Setup Frontend
+### 3. Spin up the Frontend
 
 ```bash
-cd frontend
-npm install
+cd Frontend/astrology-app
 cp .env.example .env
 # Set NEXT_PUBLIC_API_URL=http://localhost:5000/api
+npm install
 npm run dev
 ```
 
@@ -410,57 +218,46 @@ Backend  → http://localhost:5000
 
 ---
 
-## 📜 Scripts
+## 🔐 Environment Variables
 
-### Backend
-```bash
-npm run dev       # Start with nodemon (hot reload)
-npm start         # Production start
-npm run lint      # ESLint check
+### Backend `.env`
+
+```env
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/deepasvision
+JWT_SECRET=your_jwt_secret_here
+JWT_EXPIRES_IN=7d
+VEDIC_API_KEY=your_vedicastro_api_key_here
+CLIENT_URL=http://localhost:3000
 ```
 
-### Frontend
-```bash
-npm run dev       # Next.js dev server
-npm run build     # Production build
-npm start         # Start production server
-npm run lint      # ESLint check
+### Frontend `.env`
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
 ---
 
 ## 🗺 Roadmap
 
-- [x] Auth (Register, Login, Forgot/Reset Password)
-- [x] User Profile — Create & Update
-- [x] Birth Chart Generation (VedicAstro API)
-- [x] Dosha Detection with DB caching
-- [x] Saved Charts & Reports
+- [x] Auth — Register, Login, Forgot/Reset Password
+- [x] User Profile — Create & Update birth details
+- [x] Birth Chart Generation (Kundli via VedicAstro API)
+- [x] Dosha Detection with MongoDB caching (Mangal, Kaal Sarp, Sade Sati, Pitra, Nadi)
+- [x] Saved Charts & Reports with pagination
 - [ ] Navamsa / D9 Chart Support
-- [ ] Kundli Matching (Compatibility)
+- [ ] Kundli Matching (Compatibility Score)
 - [ ] Horoscope by Zodiac Sign
-- [ ] PDF Export of Reports
+- [ ] PDF Export of Birth Charts & Reports
 - [ ] Push Notifications for Daily Horoscope
 - [ ] Admin Dashboard
 
 ---
 
-## 🤝 Contributing
+<div align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FF6B35,100:FFD700&height=120&section=footer" width="100%" />
 
-Contributions are welcome! To get started:
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/your-feature-name`
-3. Commit your changes: `git commit -m 'Add: your feature description'`
-4. Push to the branch: `git push origin feature/your-feature-name`
-5. Open a Pull Request
-
-Please follow the existing code style and add comments where necessary.
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
+  <b>Designed for Seekers. Built by the Deepa's Vision Team.</b><br/>
+  <i>Leave a ⭐ if the stars aligned for you!</i>
+</div>
